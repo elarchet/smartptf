@@ -37,7 +37,7 @@ class DisplayMA(DisplayForecast):
         if self.is_called:
             mm.forecast_ma = mm.forecastor.moving_average(window=self.window, output="polars")
         if mm.forecast_ma is not None:
-            fig = px.histogram(mm.forecast_ma, nbins=50)
+            fig = px.histogram(mm.forecast_ma.to_pandas(), nbins=50)
             fig.update_layout(xaxis_tickformat=".1%", showlegend=False)
             self.graph_pholder.plotly_chart(fig)
 
@@ -49,7 +49,7 @@ class DisplayARIMA(DisplayForecast):
         if self.is_called:
             mm.forecast_arima = mm.forecastor.arima(output="polars")
         if mm.forecast_arima is not None:
-            fig = px.histogram(mm.forecast_arima, nbins=50)
+            fig = px.histogram(mm.forecast_arima.to_pandas(), nbins=50)
             fig.update_layout(xaxis_tickformat=".1%", showlegend=False)
             self.graph_pholder.plotly_chart(fig)
 

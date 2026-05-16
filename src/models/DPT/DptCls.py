@@ -79,18 +79,20 @@ class DPT(TimesSeriesPolars):
 
         index_logR = self.logR[self.index_ticker]
         assets_logR = self.logR.select(pl.all().exclude(self.index_ticker))
+        assets_logR_np = assets_logR.to_numpy().T
+        index_logR_np = index_logR.to_numpy()
 
         # Calculate Fourier Transform
-        _, R = welch(assets_logR.transpose(), **spectral_params)
+        _, R = welch(assets_logR_np, **spectral_params)
         self.R = pl.DataFrame(np.sqrt(R[:, 1:]), schema=assets_logR.columns)  # Remove the first element (frequency 0)
         logger.debug("Fourier Transform calculated successfully.")
 
         # Calculate phase-shift
         ## Cross-Spectral Density
-        _, csd_np = csd(assets_logR.transpose(), index_logR, **spectral_params)
+        _, csd_np = csd(assets_logR_np, index_logR_np, **spectral_params)
         self.csd = pl.DataFrame(csd_np[:, 1:], schema=assets_logR.columns)  # see above
         ## Coherence
-        _, coherence_np = coherence(assets_logR.transpose(), index_logR, **spectral_params)
+        _, coherence_np = coherence(assets_logR_np, index_logR_np, **spectral_params)
         self.coherence = pl.DataFrame(coherence_np[:, 1:], schema=assets_logR.columns)  # see above
         ## Phase shift from cross-spectrum, use to convert complex to real
         self.theta = pl.DataFrame(np.angle(csd_np[:, 1:]), schema=assets_logR.columns)
