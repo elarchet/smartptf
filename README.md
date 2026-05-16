@@ -22,7 +22,7 @@ This creates a local virtual environment in `.venv` and installs all dependencie
 From the project root, run:
 
 ```bash
-uv run streamlit run app.py
+uv run streamlit run src/app.py
 ```
 
 Streamlit should open automatically in your browser (typically at http://localhost:8501).
@@ -34,7 +34,7 @@ Training logs are written under `models/DPT/logs` by the DPT training script.
 Run training with uv:
 
 ```bash
-uv run python models/DPT/AI_CLILearning.py
+uv run python src/models/DPT/AI_CLILearning.py
 ```
 
 Then launch TensorBoard:

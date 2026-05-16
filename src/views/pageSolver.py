@@ -3,9 +3,9 @@ from typing import Literal
 import numpy as np
 import streamlit as st
 
-from components.MemorySession import MemorySession as mm
-from components.PageModels import PageModel, RenderWarning
-from components.StreamComponents import heatmap, piechart, treemap
+from src.components.MemorySession import MemorySession as mm
+from src.components.PageModels import PageModel, RenderWarning
+from src.components.StreamComponents import heatmap, piechart, treemap
 
 
 def signals_sliders(

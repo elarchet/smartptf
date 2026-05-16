@@ -3,11 +3,11 @@ from collections import defaultdict
 import polars as pl
 import streamlit as st
 
-from components.PageModels import RenderWarning
-from models.DPT.DptCls import DPT, OptimizedPortfolio
-from models.Forecasting import Forecast
-from models.Load import MarketIndex
-from utils.polars import TimesSeriesPolars
+from src.components.PageModels import RenderWarning
+from src.models.DPT.DptCls import DPT, OptimizedPortfolio
+from src.models.Forecasting import Forecast
+from src.models.Load import MarketIndex
+from src.utils.polars import TimesSeriesPolars
 
 
 class MemorySessionCls:

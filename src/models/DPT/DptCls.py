@@ -7,7 +7,7 @@ import polars as pl
 import pulp as plp
 from scipy.signal import coherence, csd, welch
 
-from utils.polars import TimesSeriesPolars
+from src.utils.polars import TimesSeriesPolars
 
 logger = logging.getLogger(__name__)
 

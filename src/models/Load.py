@@ -13,8 +13,8 @@ import yfinance as yf
 from dateutil.relativedelta import relativedelta
 from tqdm import tqdm
 
-from utils.polars import TimesSeriesPolars
-from utils.utils import Period, force_list, relativedelta_str
+from src.utils.polars import TimesSeriesPolars
+from src.utils.utils import Period, force_list, relativedelta_str
 
 logger = logging.getLogger(__name__)
 

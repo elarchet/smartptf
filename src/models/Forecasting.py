@@ -5,7 +5,7 @@ import polars as pl
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA
 
-from utils.polars import TimesSeriesPolars
+from src.utils.polars import TimesSeriesPolars
 
 
 @dataclass

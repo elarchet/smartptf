@@ -1,9 +1,9 @@
 import streamlit as st
 from dotenv import load_dotenv
 
-from config.logging_config import configure_logging
+from src.config.logging_config import configure_logging
 
-load_dotenv("config/.env")
+load_dotenv("src/config/.env")
 configure_logging()
 
 

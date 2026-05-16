@@ -1,18 +1,12 @@
 import os
-import sys
 import time
 from datetime import date
-from pathlib import Path
 
 import polars as pl
-from stable_baselines3 import PPO, TD3
+from stable_baselines3 import TD3
 
-ROOT_DIR = Path(os.getcwd())
-sys.path.append(str(ROOT_DIR))
-
-from models.DPT import DPTEnv, TensorboardCallBack
-from utils.polars import TimesSeriesPolars
-
+from src.models.DPT import DPTEnv, TensorboardCallBack
+from src.utils.polars import TimesSeriesPolars
 
 data = pl.read_csv("data/index_historical/SP500_ohlcv_2004-11-30_to_2024-12-31.csv", schema_overrides={"Date": date})
 data_holder = TimesSeriesPolars(data=data, index_ticker='GSPC.INDX')

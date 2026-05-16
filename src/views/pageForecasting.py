@@ -1,9 +1,9 @@
 import plotly.express as px
 import streamlit as st
 
-from components.MemorySession import MemorySession as mm
-from components.PageModels import PageModel, RenderWarning, StreamModel
-from models.Forecasting import Forecast
+from src.components.MemorySession import MemorySession as mm
+from src.components.PageModels import PageModel, RenderWarning, StreamModel
+from src.models.Forecasting import Forecast
 
 MOVING_AVERAGE = "Moving Average"
 ARIMA = "AutoArima"

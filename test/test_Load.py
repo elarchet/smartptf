@@ -3,8 +3,8 @@ import os
 import pytest
 from dotenv import load_dotenv
 
-from config.logging_config import configure_logging
-from models.Load import MarketIndex, MarkKetIndexComponents
+from src.config.logging_config import configure_logging
+from src.models.Load import MarketIndex, MarkKetIndexComponents
 
 load_dotenv("config/.env")
 configure_logging()
