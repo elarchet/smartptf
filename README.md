@@ -9,13 +9,16 @@ This project now uses uv for dependency and environment management.
 
 ## Install Dependencies
 
-From the project root, run:
+From the project root, use one of these commands:
 
 ```bash
-uv sync
+uv sync                              # Simple app execution
+uv sync --dev                        # Development tools (tests, deptry, etc.)
+uv sync --extra ai                  # DRL training dependencies
+uv sync --all-extras --all-groups   # Everything
 ```
 
-This creates a local virtual environment in `.venv` and installs all dependencies from `pyproject.toml`.
+These commands create or update the local virtual environment in `.venv`.
 
 ## Run the Streamlit App
 
@@ -28,6 +31,12 @@ uv run streamlit run src/app.py
 Streamlit should open automatically in your browser (typically at http://localhost:8501).
 
 ## AI Training and TensorBoard
+
+To train the DRL model, make sure you installed AI dependencies first:
+
+```bash
+uv sync --extra ai
+```
 
 Training logs are written under `models/DPT/logs` by the DPT training script.
 
