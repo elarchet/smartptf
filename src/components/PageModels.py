@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 import streamlit as st
 
+from src.settings import settings
+
 
 class RenderWarning(Exception):
     pass
@@ -22,7 +24,10 @@ class StreamModel(ABC):
         except RenderInfo as e:
             st.info(e)
         except Exception as e:
-            st.error(e)
+            if settings.DEBUG_MODE:
+                st.exception(e)
+            else:
+                st.error(e)
 
     @abstractmethod
     def render_before(self):
