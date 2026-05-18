@@ -1,9 +1,16 @@
-import random
-from collections import defaultdict
-from datetime import date
+# ruff: noqa: F401
+import warnings
 
-from dateutil.relativedelta import relativedelta
+try:
+    from .DptCls import DPT, OptimizedPortfolio
+    from .gymEnv import DPTEnv
+    from .TensorboardCallBack import TensorboardCallBack
+except ImportError as e:
+    warnings.warn(
+        "Could not load AI components due to missing dependencies. "
+        "Please install the 'ai' optional dependencies (e.g., pip install \".[ai]\"). "
+        f"Original error: {e}",
+        ImportWarning,
+        stacklevel=2
+    )
 
-from .DptCls import DPT, OptimizedPortfolio
-from .gymEnv import DPTEnv
-from .TensorboardCallBack import TensorboardCallBack
