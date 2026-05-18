@@ -98,11 +98,14 @@ class DisplayEODHD(BaseDisplay):
             )
 
     def load(self, marketindex: MarketIndex):
+        marketindex.set_eodhd_key(self.eodhd_Key)
+        if not marketindex.eodhd_key:
+            raise RenderWarning("Please set your EODHD API key in the .env file or enter it above.")
         marketindex.load_from_eodhd(self.threshold)
 
 
 class DisplayYahoo(BaseDisplay):
-    threshold: float | None = field(init=False)
+    threshold: float = field(default=0.0, init=False)
 
     def render(self):
         col, _ = st.columns([1, 3])

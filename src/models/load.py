@@ -168,6 +168,10 @@ class MarketIndex(TimesSeriesPolars):
         if self.eodhd_key is not None:
             self._eodhd_client = Eodhd(self.eodhd_key)
 
+    def set_eodhd_key(self, eodhd_key: str | None) -> None:
+        self.eodhd_key = eodhd_key
+        self._eodhd_client = Eodhd(eodhd_key) if eodhd_key else None
+
     def load_from_yahoo(self, threshold_missing_val: float = 0.03) -> None:
         df = yf.download(
             self.compo,
