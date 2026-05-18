@@ -45,7 +45,8 @@ class MemorySessionCls:
     def dpt(self) -> DPT:
         if not (dpt_obj := st.session_state.get("dpt")):
             index_ticker = self.index_ticker
-            dpt_obj = DPT(data=self.data_observation.data, index_ticker=index_ticker)
+            data_close = self.data_observation.get("Close", include_index=True)
+            dpt_obj = DPT(data=data_close, index_ticker=index_ticker)
             dpt_obj.calculate_signals()
             st.session_state["dpt"] = dpt_obj
         return dpt_obj
