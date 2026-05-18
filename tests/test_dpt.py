@@ -47,3 +47,17 @@ def test_solver(sp500_close_subset):
     assert (optimalpdf.ptf_return is not None) or (len(optimalpdf.ptf_return) > 0)
     assert (optimalpdf.ptf_betas is not None) or (len(optimalpdf.ptf_betas) > 0)
     assert (optimalpdf.ptf_alphas is not None) or (len(optimalpdf.ptf_alphas) > 0)
+
+def test_dpt_only_returns():
+    # Test DPT initialization when only logR is provided
+    # Should trigger the `if len(self.logR) == 0:` code block
+    import polars as pl
+    data = pl.DataFrame({
+        "Date": ["2024-01-01", "2024-01-02", "2024-01-03"],
+        "AAPL_logR": [0.01, -0.02, 0.03],
+        "GSPC.INDX_logR": [0.005, -0.01, 0.015]
+    })
+    dpt = DPT(data=data, index_ticker="GSPC.INDX")
+    assert dpt.logR is not None
+    assert len(dpt.logR) == 3
+

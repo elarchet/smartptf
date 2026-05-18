@@ -63,6 +63,8 @@ def test_load_from_csv(sp500):
     assert sp500.data is not None, "Data should be loaded successfully from CSV"
     assert len(sp500.data) > 0, "Data should not be empty after loading from CSV"
     assert len(sp500.open) > 0, "Open data should not be empty"
+    assert len(sp500.low) > 0, "Low data should not be empty"
+    assert len(sp500.volume) > 0, "Volume data should not be empty"
 
 
 def test_load_from_eodhd(sp500):
@@ -102,3 +104,53 @@ def test_to_csv(sp500, tmp_path):
     sp500.load_from_csv()
     sp500.to_csv(directory=tmp_path)
     assert sp500.csv_data_path.exists(), "CSV file should be created"
+
+def test_eodhd_get_historical_success(monkeypatch):
+    import requests
+
+    from src.models.Load import Eodhd
+
+    class MockResponse:
+        def __init__(self, status_code, text):
+            self.status_code = status_code
+            self.text = text
+
+    def mock_get(url, params):
+        csv_data = "Date,Open,High,Low,Close,Adjusted_close,Volume\n2024-10-31,100,105,95,100,100,1000\n2024-11-30,101,106,96,101,101,1100"
+        return MockResponse(200, csv_data)
+
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    eodhd_client = Eodhd(api_key="demo")
+    df = eodhd_client.get_historical(tickers=["AAPL", "MSFT"], from_date="2024-10-01", to_date="2024-12-01", interval="m")
+    assert df is not None
+    assert "AAPL_Close" in df.columns
+    assert "MSFT_Close" in df.columns
+    assert len(df) == 2
+
+def test_eodhd_get_historical_rate_limit(monkeypatch):
+    import requests
+
+    from src.models.Load import Eodhd
+
+    class MockResponse:
+        def __init__(self, status_code, text):
+            self.status_code = status_code
+            self.text = text
+
+    call_count = 0
+    def mock_get(url, params):
+        nonlocal call_count
+        call_count += 1
+        if call_count == 1:
+            return MockResponse(429, "Rate limit exceeded")
+        csv_data = "Date,Open,High,Low,Close,Adjusted_close,Volume\n2024-10-31,100,105,95,100,100,1000"
+        return MockResponse(200, csv_data)
+
+    monkeypatch.setattr('src.models.Load.sleep', lambda x: None)
+    monkeypatch.setattr(requests, "get", mock_get)
+
+    eodhd_client = Eodhd(api_key="demo")
+    df = eodhd_client.get_historical(tickers=["AAPL"], from_date="2024-10-01", to_date="2024-12-01", interval="m")
+    assert df is not None
+    assert call_count == 2
