@@ -1,8 +1,8 @@
 import streamlit as st
 
-from src.components.MemorySession import MemorySession as mm
-from src.components.PageModels import PageModel
-from src.components.StreamComponents import heatmap
+from src.components.memory_session import MemorySession as mm
+from src.components.page_models import PageModel
+from src.components.stream_components import heatmap
 
 
 class FourierPage(PageModel):

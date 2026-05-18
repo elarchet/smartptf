@@ -12,7 +12,7 @@ import polars as pl
 from dateutil.relativedelta import relativedelta
 from gymnasium import spaces
 
-from src.models.DPT import DPT, OptimizedPortfolio
+from src.models.dpt import DPT, OptimizedPortfolio
 from src.utils.polars import sliding_window
 
 logger = logging.getLogger(__name__)

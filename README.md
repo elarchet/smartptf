@@ -38,18 +38,18 @@ To train the DRL model, make sure you installed AI dependencies first:
 uv sync --extra ai
 ```
 
-Training logs are written under `models/DPT/logs` by the DPT training script.
+Training logs are written under `models/dpt/logs` by the DPT training script.
 
 Run training with uv:
 
 ```bash
-uv run python src/models/DPT/AI_CLILearning.py
+uv run python src/models/dpt/ai_cli_learning.py
 ```
 
 Then launch TensorBoard:
 
 ```bash
-uv run tensorboard --logdir=models/DPT/logs
+uv run tensorboard --logdir=models/dpt/logs
 ```
 
 Open the URL shown by TensorBoard (typically http://localhost:6006).

@@ -3,10 +3,10 @@ from collections import defaultdict
 import polars as pl
 import streamlit as st
 
-from src.components.PageModels import RenderWarning
-from src.models.DPT.DptCls import DPT, OptimizedPortfolio
-from src.models.Forecasting import Forecast
-from src.models.Load import MarketIndex
+from src.components.page_models import RenderWarning
+from src.models.dpt.dpt_cls import DPT, OptimizedPortfolio
+from src.models.forecasting import Forecast
+from src.models.load import MarketIndex
 from src.utils.polars import TimesSeriesPolars
 
 

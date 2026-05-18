@@ -6,9 +6,9 @@ import numpy as np
 import streamlit as st
 from dateutil.relativedelta import relativedelta
 
-from src.components.MemorySession import MemorySession as mm
-from src.components.PageModels import PageModel, RenderWarning, StreamModel
-from src.models.Load import MarketIndex, MarkKetIndexComponents
+from src.components.memory_session import MemorySession as mm
+from src.components.page_models import PageModel, RenderWarning, StreamModel
+from src.models.load import MarketIndex, MarkKetIndexComponents
 from src.settings import settings
 from src.utils.utils import Horizon, Period, relativedelta_str
 

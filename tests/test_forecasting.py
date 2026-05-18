@@ -4,7 +4,7 @@ import polars as pl
 import pytest
 
 from src.config.logging_config import configure_logging
-from src.models.Forecasting import Forecast
+from src.models.forecasting import Forecast
 
 configure_logging()
 

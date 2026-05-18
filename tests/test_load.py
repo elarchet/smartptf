@@ -5,7 +5,7 @@ import polars as pl
 import pytest
 
 from src.config.logging_config import configure_logging
-from src.models.Load import MarketIndex, MarkKetIndexComponents
+from src.models.load import MarketIndex, MarkKetIndexComponents
 
 configure_logging()
 
@@ -51,7 +51,7 @@ def test_load_from_yahoo(sp500, monkeypatch):
         columns=columns,
     )
 
-    monkeypatch.setattr("src.models.Load.yf.download", lambda *args, **kwargs: fake_df)
+    monkeypatch.setattr("src.models.load.yf.download", lambda *args, **kwargs: fake_df)
     sp500.load_from_yahoo()
     assert sp500.data is not None, "Data should be loaded successfully"
     assert len(sp500.data) > 0, "Data should not be empty"
@@ -108,7 +108,7 @@ def test_to_csv(sp500, tmp_path):
 def test_eodhd_get_historical_success(monkeypatch):
     import requests
 
-    from src.models.Load import Eodhd
+    from src.models.load import Eodhd
 
     class MockResponse:
         def __init__(self, status_code, text):
@@ -131,7 +131,7 @@ def test_eodhd_get_historical_success(monkeypatch):
 def test_eodhd_get_historical_rate_limit(monkeypatch):
     import requests
 
-    from src.models.Load import Eodhd
+    from src.models.load import Eodhd
 
     class MockResponse:
         def __init__(self, status_code, text):
@@ -147,7 +147,7 @@ def test_eodhd_get_historical_rate_limit(monkeypatch):
         csv_data = "Date,Open,High,Low,Close,Adjusted_close,Volume\n2024-10-31,100,105,95,100,100,1000"
         return MockResponse(200, csv_data)
 
-    monkeypatch.setattr('src.models.Load.sleep', lambda x: None)
+    monkeypatch.setattr('src.models.load.sleep', lambda x: None)
     monkeypatch.setattr(requests, "get", mock_get)
 
     eodhd_client = Eodhd(api_key="demo")

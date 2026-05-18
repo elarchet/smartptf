@@ -2,9 +2,9 @@
 import warnings
 
 try:
-    from .DptCls import DPT, OptimizedPortfolio
-    from .gymEnv import DPTEnv
-    from .TensorboardCallBack import TensorboardCallBack
+    from .dpt_cls import DPT, OptimizedPortfolio
+    from .gym_env import DPTEnv
+    from .tensorboard_callback import TensorboardCallBack
 except ImportError as e:
     warnings.warn(
         "Could not load AI components due to missing dependencies. "

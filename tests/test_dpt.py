@@ -3,9 +3,9 @@ from datetime import date
 import pytest
 
 from src.config.logging_config import configure_logging
-from src.models.DPT.DptCls import DPT
-from src.models.Forecasting import Forecast
-from src.models.Load import MarketIndex, MarkKetIndexComponents
+from src.models.dpt.dpt_cls import DPT
+from src.models.forecasting import Forecast
+from src.models.load import MarketIndex, MarkKetIndexComponents
 
 configure_logging()
 

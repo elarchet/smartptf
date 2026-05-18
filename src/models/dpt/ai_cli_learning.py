@@ -5,7 +5,7 @@ from datetime import date
 import polars as pl
 from stable_baselines3 import TD3
 
-from src.models.DPT import DPTEnv, TensorboardCallBack
+from src.models.dpt import DPTEnv, TensorboardCallBack
 from src.utils.polars import TimesSeriesPolars
 
 data = pl.read_csv("data/index_historical/SP500_ohlcv_2004-11-30_to_2024-12-31.csv", schema_overrides={"Date": date})
@@ -15,8 +15,8 @@ full_returns = data_holder.get('logR', include_index=True)
 
 # model_path = models_dir / '1500.zip'
 
-models_dir = f"models/DPT/trained-agents/{int(time.time())}/"
-logdir = f"models/DPT/logs/{int(time.time())}/"
+models_dir = f"models/dpt/trained-agents/{int(time.time())}/"
+logdir = f"models/dpt/logs/{int(time.time())}/"
 
 if not os.path.exists(models_dir):
 	os.makedirs(models_dir)
