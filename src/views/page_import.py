@@ -87,6 +87,7 @@ class DisplayEODHD(BaseDisplay):
     threshold: float | None = field(init=False)
 
     def render(self):
+        raise RenderWarning("EODHD api has changed, this method is no longer working. Please select another method.")
         col1, col2 = st.columns([2, 1])
         with col1:
             self.eodhd_Key = st.text_input("EODHD API Key", type="password", value=settings.EODHD_API_KEY)
