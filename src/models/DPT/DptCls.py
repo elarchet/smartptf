@@ -181,9 +181,9 @@ class DPT(TimesSeriesPolars):
         # --- 2. Init of pulp variables
         dpt_problem = plp.LpProblem("DPT_Optimization", plp.LpMaximize)
         # Continuous weight variables (w_j)
-        weights = plp.LpVariable.dicts("w", securities, lowBound=0, cat="Continuous")
+        weights = dpt_problem.add_variable_dicts("w", securities, lowBound=0, cat="Continuous")
         # Binary variables (z_j) to indicate if a security is selected
-        selection = plp.LpVariable.dicts("z", securities, cat="Binary")  # z_j = 0 or 1
+        selection = dpt_problem.add_variable_dicts("z", securities, cat="Binary")  # z_j = 0 or 1
         logger.debug("Pulp variables initialized.")
 
         # --- 3. Define Objective Function ---

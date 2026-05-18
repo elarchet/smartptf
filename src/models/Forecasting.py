@@ -48,13 +48,13 @@ class Forecast(TimesSeriesPolars):
         sf = StatsForecast(models=[model], freq="1mo", n_jobs=-1, verbose=True)
 
         returns = self.get("logR", include_index=False, include_date=True)
-        returns2 = returns.melt(
-            id_vars="Date", variable_name="tickers", value_name="logR"
-        )  # TODO melt is depreciated, use unpivot
+        returns2 = returns.unpivot(
+            index="Date", variable_name="tickers", value_name="logR"
+        )
 
         model_fit = sf.fit(df=returns2, id_col="tickers", time_col="Date", target_col="logR")
         forecasts = model_fit.predict(1)
-        forecasts2 = forecasts.pivot(values="AutoARIMA", index="Date", columns="tickers").drop("Date")
+        forecasts2 = forecasts.pivot(values="AutoARIMA", index="Date", on="tickers").drop("Date")
         if output == "polars":
             return forecasts2
         return forecasts2.to_dicts()[0]

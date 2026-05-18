@@ -36,7 +36,7 @@ def heatmap(
     fig = px.imshow(
         data_t, x=xlabels, y=ylabels, color_continuous_scale=colormap, zmin=zmin, zmax=zmax, aspect="auto", title=title
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 def treemap(data: pl.DataFrame, values_label: str):

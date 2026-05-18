@@ -67,9 +67,9 @@ class BaseDisplay(StreamModel):
                 cut_testing = data_testing.data
 
         st.markdown("Data Observation")
-        st.dataframe(cut_observation, use_container_width=True)
+        st.dataframe(cut_observation, width='stretch')
         st.markdown("Data Testing")
-        st.dataframe(cut_testing, use_container_width=True)
+        st.dataframe(cut_testing, width='stretch')
 
     @abstractmethod
     def load(self, marketindex: MarketIndex): ...
@@ -145,7 +145,7 @@ class ImportPage(PageModel):
         compo_list = components.get_composition(date_end)
         compo = np.array(compo_list)
         compo = np.pad(compo, (0, -len(compo) % 15), constant_values=np.nan).reshape(-1, 15)
-        st.dataframe(compo, use_container_width=True)
+        st.dataframe(compo, width='stretch')
 
         load_method = st.segmented_control(
             "Select loading method", ["CSV", "EODHD", "YahooFinance", "Auto"], default="CSV"
