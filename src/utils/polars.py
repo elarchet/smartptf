@@ -37,13 +37,8 @@ class TimesSeriesPolars:
     def calculate_logR(self, enforce: bool = False) -> None:
         if any(col.endswith("_logR") for col in self.data.columns) and not enforce:
             return
-        self.data = self.data.with_columns(
-            (pl.col(col).log().diff()).alias(col.replace("_Close", "_logR"))
-            for col in self.data.columns
-            if col.endswith("_Close")
-        )
-        sorted_columns = ["Date"] + sorted(self.get(include_date=False, include_index=True).columns)
-        self.data = self.data.select(sorted_columns)
+        cols = cs.all() - cs.date() - cs.ends_with('_logR')
+        self.data = self.data.with_columns(cols.log().diff().name.suffix('_logR'))
 
 
 def sliding_window(df: pl.DataFrame, first_date_limit: date, window_length: int = 193) -> Generator[pl.DataFrame]:
