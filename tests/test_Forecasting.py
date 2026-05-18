@@ -1,30 +1,37 @@
+from datetime import date
+
+import polars as pl
 import pytest
 
 from src.config.logging_config import configure_logging
-from src.models.DPT.DptCls import DPT
 from src.models.Forecasting import Forecast
-from src.models.Load import MarketIndex, MarkKetIndexComponents
 
 configure_logging()
 
 
 @pytest.fixture
-def dpt():
-    components = MarkKetIndexComponents(csv_compo_path="data/index_compo/sp500_compo_until_2025-03-10.csv")
-    compo = components.get_composition(date_ref="2020-01-01")
-    sp500 = MarketIndex(name="SP500", compo=compo, date_end="2020-01-10", period="16y")
-    sp500.load_from_csv()
-    dpt = DPT(sp500.close, index_ticker="GSPC.INDX")
-    return dpt
+def predictor():
+    dates = [date(2023, m, 28) for m in range(1, 13)] + [date(2024, m, 28) for m in range(1, 13)]
+    data = pl.DataFrame({
+        "Date": dates,
+        "AAA_logR": [0.001 * i for i in range(24)],
+        "BBB_logR": [0.0005 * i for i in range(24)],
+        "GSPC.INDX_logR": [0.0008 * i for i in range(24)],
+    })
+    return Forecast(data=data, index_ticker="GSPC.INDX")
 
 
-def test_moving_average(dpt):
-    predictor = Forecast(data=dpt.data)
+def test_moving_average(predictor: Forecast):
     predictions = predictor.moving_average(window=5)
-    assert predictions is not None, "Moving average prediction should be calculated successfully"
+    assert "AAA" in predictions
+    assert "BBB" in predictions
+    assert "GSPC.INDX" not in predictions
+    assert predictions["AAA"] == 0.001 * (19 + 20 + 21 + 22 + 23) / 5
+    assert predictions["BBB"] == 0.0005 * (19 + 20 + 21 + 22 + 23) / 5
 
 
-def test_arima(dpt):
-    predictor = Forecast(data=dpt.data)
-    predictions = predictor.arima()
-    assert predictions is not None, "Moving average prediction should be calculated successfully"
+def test_arima(predictor):
+    predictions = predictor.arima(approximation=True)
+    assert predictions is not None, "ARIMA prediction should be calculated successfully"
+    assert "AAA" in predictions
+    assert "BBB" in predictions

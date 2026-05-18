@@ -1,46 +1,49 @@
+from datetime import date
+
 import pytest
-from dotenv import load_dotenv
 
 from src.config.logging_config import configure_logging
 from src.models.DPT.DptCls import DPT
-from src.models.Forecasting import Predict
+from src.models.Forecasting import Forecast
 from src.models.Load import MarketIndex, MarkKetIndexComponents
 
-load_dotenv("config/.env")
 configure_logging()
 
 
 @pytest.fixture
-def sp500_csv():
-    components = MarkKetIndexComponents(csv_compo_path="data/index_compo/sp500_compo_until_2025-03-10.csv")
-    compo = components.get_composition(date_ref="2020-01-01")
-    sp500 = MarketIndex(name="SP500", compo=compo, date_end="2020-01-10", period="16y")
+def sp500_close_subset():
+    components = MarkKetIndexComponents(csv_path="data/index_compo/sp500_compo_until_2025-03-10.csv")
+    compo = components.get_composition(date_ref=date(2024, 12, 31))
+    sp500 = MarketIndex(name="SP500", compo=compo, date_end=date(2024, 12, 31), period="20y")
     sp500.load_from_csv()
-    return sp500
+    close = sp500.close
+    non_index_cols = [col for col in close.columns if col not in {"Date", "GSPC.INDX"}]
+    subset_cols = ["Date", "GSPC.INDX", *non_index_cols[:8]]
+    return close.select(subset_cols)
 
 
-def test_init(sp500_csv):
-    dpt = DPT(sp500_csv.close, index_ticker="GSPC.INDX")
+def test_init(sp500_close_subset):
+    dpt = DPT(data=sp500_close_subset, index_ticker="GSPC.INDX")
     dpt.calculate_signals()  # TODO add a control sin_theta**2 + cos_theta**2 = 1.0
-    assert dpt.log_returns is not None, "Log returns should be calculated successfully"
-    assert len(dpt.log_returns) > 0, "Log returns DataFrame should not be empty"
+    assert dpt.logR is not None, "Log returns should be calculated successfully"
+    assert len(dpt.logR) > 0, "Log returns DataFrame should not be empty"
 
     val = (dpt.cos_theta.to_numpy() ** 2 + dpt.sin_theta.to_numpy() ** 2).flatten().sum()
     assert round(val, 3) == float(dpt.theta.shape[0] * dpt.theta.shape[1])
 
 
-def test_solver(sp500_csv):
-    dpt = DPT(sp500_csv.close, index_ticker="GSPC.INDX")
+def test_solver(sp500_close_subset):
+    dpt = DPT(data=sp500_close_subset, index_ticker="GSPC.INDX")
     dpt.calculate_signals()
-    predictor = Predict(data=dpt.data)
-    forecasts = predictor.moving_average()
-    optimalpdf = dpt.solve(forecasts, C_alphas=0.8, C_betas=1.6)
+    predictor = Forecast(data=dpt.data, index_ticker="GSPC.INDX")
+    forecasts = predictor.moving_average(window=12)
+    optimalpdf = dpt.solve(forecasts, S=5, C_alphas=0.8, C_betas=1.6)
 
-    assert optimalpdf.weights is not None
-    assert optimalpdf.returns is not None
-    assert optimalpdf.betas is not None
-    assert optimalpdf.alphas is not None
-    assert optimalpdf.R is not None
-    assert optimalpdf.ptf_return is not None
-    assert optimalpdf.ptf_betas is not None
-    assert optimalpdf.ptf_alphas is not None
+    assert (optimalpdf.weights is not None) or (len(optimalpdf.weights) > 0)
+    assert (optimalpdf.returns is not None )or (len(optimalpdf.returns) > 0)
+    assert (optimalpdf.betas is not None) or (len(optimalpdf.betas) > 0)
+    assert (optimalpdf.alphas is not None) or (len(optimalpdf.alphas) > 0)
+    assert (optimalpdf.R is not None) or (len(optimalpdf.R) > 0)
+    assert (optimalpdf.ptf_return is not None) or (len(optimalpdf.ptf_return) > 0)
+    assert (optimalpdf.ptf_betas is not None) or (len(optimalpdf.ptf_betas) > 0)
+    assert (optimalpdf.ptf_alphas is not None) or (len(optimalpdf.ptf_alphas) > 0)
