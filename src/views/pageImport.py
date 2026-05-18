@@ -1,4 +1,3 @@
-import os
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from datetime import date
@@ -10,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from src.components.MemorySession import MemorySession as mm
 from src.components.PageModels import PageModel, RenderWarning, StreamModel
 from src.models.Load import MarketIndex, MarkKetIndexComponents
+from src.settings import settings
 from src.utils.utils import Horizon, Period, relativedelta_str
 
 
@@ -89,7 +89,7 @@ class DisplayEODHD(BaseDisplay):
     def render(self):
         col1, col2 = st.columns([2, 1])
         with col1:
-            self.eodhd_Key = st.text_input("EODHD API Key", type="password", value=os.getenv("EODHD_API_KEY"))
+            self.eodhd_Key = st.text_input("EODHD API Key", type="password", value=settings.EODHD_API_KEY)
             if not self.eodhd_Key:
                 raise RenderWarning("Please set your EODHD API key in the .env file or enter it above.")
         with col2:
