@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, overload
 
 import polars as pl
 from statsforecast import StatsForecast
@@ -12,13 +12,34 @@ from src.utils.polars import TimesSeriesPolars
 class Forecast(TimesSeriesPolars):
     index_ticker: str
 
+    @overload
     def arima(
         self,
+        *,
+        auto: bool = True,
+        order: tuple | None = None,
+        output: Literal["dict"] = "dict",
+        approximation: bool = True,
+    ) -> dict[str, float]: ...
+
+    @overload
+    def arima(
+        self,
+        *,
+        auto: bool = True,
+        order: tuple | None = None,
+        output: Literal["polars"],
+        approximation: bool = True,
+    ) -> pl.DataFrame: ...
+
+    def arima(
+        self,
+        *,
         auto: bool = True,
         order: tuple | None = None,
         output: Literal["polars", "dict"] = "dict",
         approximation: bool = True,
-    ) -> pl.DataFrame | dict[str, float]:  # TODO graph the auto correlation
+    ):  # TODO graph the auto correlation
         if auto:
             model = AutoARIMA(season_length=12, approximation=approximation, trace=True)
         else:
@@ -38,9 +59,19 @@ class Forecast(TimesSeriesPolars):
             return forecasts2
         return forecasts2.to_dicts()[0]
 
+    @overload
     def moving_average(
-        self, window: int = 0, output: Literal["polars", "dict"] = "dict"
-    ) -> pl.DataFrame | dict[str, float]:
+        self, *, window: int = 0, output: Literal["dict"] = "dict"
+    ) -> dict[str, float]: ...
+
+    @overload
+    def moving_average(
+        self, *, window: int = 0, output: Literal["polars"]
+    ) -> pl.DataFrame: ...
+
+    def moving_average(
+        self, *, window: int = 0, output: Literal["polars", "dict"] = "dict"
+    ):
         returns = self.get("logR", include_index=False, include_date=False)
         mean = returns[-window:].mean()
         if output == "polars":
