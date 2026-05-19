@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 import streamlit as st
 
 from src.components.page_models import PageModel, RenderWarning
+from src.settings import settings
 
 if TYPE_CHECKING:
     from src.models.load import MarketIndex
@@ -15,7 +16,10 @@ class ExportPage(PageModel):
 
     def render(self):
         st.title("Export")
-        export_button = st.button("Save data", type="primary")
+        export_button = st.button("Save data", type="primary", disabled=not settings.DEBUG_MODE)
+        if not settings.DEBUG_MODE:
+            st.warning("Exporting data is currently disabled in production mode.")
+            return
 
         marketindex: MarketIndex = st.session_state.get("marketindex")
         if marketindex is None and marketindex.data is None:
