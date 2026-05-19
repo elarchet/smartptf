@@ -6,13 +6,15 @@ from src.config.logging_config import configure_logging
 from src.models.dpt.dpt_cls import DPT
 from src.models.forecasting import Forecast
 from src.models.load import MarketIndex, MarkKetIndexComponents
+from src.settings import settings
 
 configure_logging()
 
 
 @pytest.fixture
 def sp500_close_subset():
-    components = MarkKetIndexComponents(csv_path="data/index_compo/sp500_compo_until_2025-03-10.csv")
+    csv_path = settings.paths.index_compo / "sp500_compo_until_2025-03-10.csv"
+    components = MarkKetIndexComponents(csv_path=csv_path)
     compo = components.get_composition(date_ref=date(2024, 12, 31))
     sp500 = MarketIndex(name="SP500", compo=compo, date_end=date(2024, 12, 31), period="20y")
     sp500.load_from_csv()

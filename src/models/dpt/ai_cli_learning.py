@@ -6,9 +6,11 @@ import polars as pl
 from stable_baselines3 import TD3
 
 from src.models.dpt import DPTEnv, TensorboardCallBack
+from src.settings import settings
 from src.utils.polars import TimesSeriesPolars
 
-data = pl.read_csv("data/index_historical/SP500_ohlcv_2004-11-30_to_2024-12-31.csv", schema_overrides={"Date": date})
+csv_path = settings.paths.index_historical / "SP500_ohlcv_2004-11-30_to_2024-12-31.csv"
+data = pl.read_csv(csv_path, schema_overrides={"Date": date})
 data_holder = TimesSeriesPolars(data=data, index_ticker='GSPC.INDX')
 data_holder.calculate_logR()
 full_returns = data_holder.get('logR', include_index=True)

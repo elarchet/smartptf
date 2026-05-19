@@ -6,11 +6,12 @@ import pytest
 
 from src.config.logging_config import configure_logging
 from src.models.load import MarketIndex, MarkKetIndexComponents
+from src.settings import settings
 
 configure_logging()
 
 
-CSV_COMPO_PATH = "data/index_compo/sp500_compo_until_2025-03-10.csv"
+CSV_COMPO_PATH = settings.paths.index_compo / "sp500_compo_until_2025-03-10.csv"
 
 
 @pytest.fixture

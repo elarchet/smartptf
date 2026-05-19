@@ -13,13 +13,11 @@ import yfinance as yf
 from dateutil.relativedelta import relativedelta
 from tqdm import tqdm
 
+from src.settings import settings
 from src.utils.polars import TimesSeriesPolars
 from src.utils.utils import Period, force_list, relativedelta_str
 
 logger = logging.getLogger(__name__)
-
-
-INDEX_HISTO_PATH = Path("data/index_historical/")
 
 
 @dataclass
@@ -200,7 +198,7 @@ class MarketIndex(TimesSeriesPolars):
     def load_from_csv(self, directory: str | Path | None = None) -> None:
         try:
             if directory is None:
-                directory = INDEX_HISTO_PATH
+                directory = settings.paths.index_historical
             elif isinstance(directory, str):
                 directory = Path(directory)
             self.csv_data_path = directory / f"{self.name}_ohlcv_{self.date_start}_to_{self.date_end}.csv"
@@ -230,7 +228,7 @@ class MarketIndex(TimesSeriesPolars):
         if self.data is None:
             raise ValueError("Data is not loaded yet")
         if directory is None:
-            directory = INDEX_HISTO_PATH
+            directory = settings.paths.index_historical
         elif isinstance(directory, str):
             directory = Path(directory)
 

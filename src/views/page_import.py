@@ -144,7 +144,7 @@ class ImportPage(PageModel):
 
         st.subheader("SP500 Composition at date")
         st.session_state["index_ticker"] = st.text_input("Index ticker", value="GSPC.INDX")
-        csv_compo_path = "./data/index_compo/sp500_compo_until_2025-03-10.csv"
+        csv_compo_path = settings.paths.index_compo / "sp500_compo_until_2025-03-10.csv"
         components = MarkKetIndexComponents(csv_path=csv_compo_path)
         compo_list = components.get_composition(date_end)
         compo = np.array(compo_list)
