@@ -1,6 +1,6 @@
 [project]
 name = "smartptf"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = [
     { name = "Etienne", email = "etienne.larchet@gmail.com" },
